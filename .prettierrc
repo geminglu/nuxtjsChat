@@ -1,0 +1,8 @@
+{
+  "semi": true,
+  "tabWidth": 2,
+  "quotes": true,
+  "singleQuote": false,
+  "printWidth": 100,
+  "spaced-comment": 0
+}
