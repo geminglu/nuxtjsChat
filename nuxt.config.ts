@@ -16,7 +16,14 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true,
   },
-  modules: ["@pinia/nuxt", "@nuxt/ui", "@nuxtjs/eslint-module", "@nuxt/content"],
+  modules: [
+    "@pinia/nuxt",
+    "@nuxt/ui",
+    "@nuxtjs/eslint-module",
+    "@nuxt/content",
+    "@vueuse/nuxt",
+    "nuxt-icon",
+  ],
   components: [
     {
       path: "~/components",
@@ -26,6 +33,14 @@ export default defineNuxtConfig({
   content: {
     api: {
       baseURL: "/api/content",
+    },
+  },
+  ui: {
+    icons: ["heroicons", "iconoir"],
+  },
+  nitro: {
+    experimental: {
+      asyncContext: true,
     },
   },
 });

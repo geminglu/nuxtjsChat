@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const colorMode = useColorMode();
 
-const color = computed(() => (colorMode.value === "dark" ? "#111827" : "white"));
+const color = computed(() => (colorMode.value === "dark" ? "#11827" : "white"));
 
 useHead({
   meta: [
@@ -31,7 +31,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div>
+  <div class="h-screen">
     <NuxtLoadingIndicator />
 
     <NuxtLayout>
