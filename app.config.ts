@@ -1,6 +1,11 @@
 export default defineAppConfig({
   title: "Hello Nuxt",
-  theme: {
-    dark: true,
+  ui: {
+    notifications: {
+      position: "top-0 bottom-auto",
+    },
+    primary: "indigo",
+    gray: "zinc",
   },
+  nuxtIcon: {},
 });

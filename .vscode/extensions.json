@@ -5,6 +5,8 @@
         "lokalise.i18n-ally",
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
-        "vue.volar"
+        "vue.volar",
+        "prisma.prisma",
+        "antfu.iconify"
     ]
 }
