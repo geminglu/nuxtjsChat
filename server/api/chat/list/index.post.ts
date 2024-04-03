@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
   const prisma = new PrismaClient();
   const chat = prisma.chat.create({
-    data: body,
+    data: { ...body, uId: event.context.uId },
   });
 
   return chat;

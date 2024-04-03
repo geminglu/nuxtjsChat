@@ -23,14 +23,28 @@
         />
         <span class="truncate">zhangsanb</span>
       </div>
-      <UButton class="rounded-full" variant="ghost" icon="i-heroicons-cog-6-tooth" />
+      <UButton
+        class="rounded-full"
+        variant="ghost"
+        icon="i-heroicons-cog-6-tooth"
+        @click="open = !open"
+      />
     </div>
+
+    <Modal v-model="open" title="设置" :confirm="confirm">
+      <Settings ref="settingsRef" />
+    </Modal>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import useChatStore from "~/store/modules/chat";
 import ChatList from "~/components/chat/ChatList.vue";
+import Modal from "~/components/baseUi/modal/Modal.vue";
+
+const open = ref(false);
+const settingsRef = ref();
 
 const chatStore = useChatStore();
 
@@ -41,5 +55,9 @@ async function handleAdd() {
   });
 
   chatStore.addHistory({ ...char, isEdit: false });
+}
+
+function confirm() {
+  console.log(settingsRef.value.submit());
 }
 </script>

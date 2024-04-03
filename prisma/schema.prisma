@@ -14,12 +14,21 @@ model Chat {
     id          Int           @id @default(autoincrement())
     title       String
     ChatHistory ChatHistory[]
+    user        User          @relation(fields: [uId], references: [id])
+    uId         Int
 }
 
 model ChatHistory {
-    id      Int      @id @default(autoincrement())
+    id      Int    @id @default(autoincrement())
     chatId  Int
-    chat    Chat     @relation(fields: [chatId], references: [id])
+    chat    Chat   @relation(fields: [chatId], references: [id])
     role    String
     content String
+}
+
+model User {
+    id     Int    @id @default(autoincrement())
+    name   String
+    avatar String
+    Chat   Chat[]
 }
