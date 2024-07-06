@@ -1,5 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import config from "./config/index";
+
 export default defineNuxtConfig({
+  devServer: {
+    port: config.port,
+  },
   app: {
     head: {
       charset: "utf-8",

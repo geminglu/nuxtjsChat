@@ -8,4 +8,15 @@ const privateKey = {
   expiresIn: process.env.EXPIRES_IN,
 };
 
-export default { db, privateKey };
+export const config = {
+  /**
+   * 开发环境端口
+   */
+  port: Number(process.env.port) || 3000,
+};
+
+export default {
+  db,
+  privateKey,
+  ...config,
+};
