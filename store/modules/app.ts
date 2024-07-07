@@ -4,7 +4,7 @@ export interface SettingsType {
 
 export const useSettings = defineStore("useSettings", {
   state: (): SettingsType => ({
-    ollamaUrl: "",
+    ollamaUrl: "" || "http://localhost:11434",
   }),
   persist: true,
   actions: {},

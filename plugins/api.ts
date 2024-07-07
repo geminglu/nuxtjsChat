@@ -1,6 +1,13 @@
+import useSettings from "~/store/modules/app";
+
 export default defineNuxtPlugin((nuxtApp) => {
+  const settings = useSettings();
   const api = $fetch.create({
-    onRequest() {},
+    onRequest({ options }) {
+      if (!options.headers) options.headers = {};
+      // @ts-ignore
+      options.headers["ollamaUrl"] = settings.ollamaUrl;
+    },
     async onResponseError({ response }) {
       const toast = useToast();
       toast.add({
