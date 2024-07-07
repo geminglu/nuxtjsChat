@@ -26,7 +26,7 @@ export const useChatStore = defineStore("chatStore", {
       const chat = this.chat.find((item) => item.id === (chatId || this.active));
       if (chat) {
         chat.model = model;
-        await $fetch(`/api/chat/list/${chat.id}`, {
+        await useNuxtApp().$api(`/api/chat/list/${chat.id}`, {
           method: "patch",
           body: { model },
         });
@@ -34,7 +34,7 @@ export const useChatStore = defineStore("chatStore", {
     },
 
     async addChat(title: string = "new chat") {
-      const chat = await $fetch("/api/chat/list", {
+      const chat = await useNuxtApp().$api("/api/chat/list", {
         method: "POST",
         body: { title: title, model: this.models[0].name },
       });
@@ -51,7 +51,7 @@ export const useChatStore = defineStore("chatStore", {
      * 获取聊天列表
      */
     async queryChat() {
-      const data = await $fetch("/api/chat/list");
+      const data = await useNuxtApp().$api("/api/chat/list");
 
       const chat =
         data?.map((item) => ({
@@ -73,30 +73,8 @@ export const useChatStore = defineStore("chatStore", {
 
     async setActive(id: number) {
       this.active = id;
-    },
-
-    async deleteHistory(index: number) {
-      // this.history.splice(index, 1);
-      // this.chat.splice(index, 1);
-      // if (this.history.length === 0) {
-      //   this.active = null;
-      //   return;
-      // }
-      // if (index > 0 && index <= this.history.length) {
-      //   const id = this.history[index - 1].id;
-      //   this.active = id;
-      //   return;
-      // }
-      // if (index === 0) {
-      //   if (this.history.length > 0) {
-      //     const id = this.history[0].id;
-      //     this.active = id;
-      //   }
-      // }
-      // if (index > this.history.length) {
-      //   const id = this.history[this.history.length - 1].id;
-      //   this.active = id;
-      // }
+      const router = useRouter();
+      router.replace(`/chat/${id}`);
     },
 
     /**
@@ -104,7 +82,7 @@ export const useChatStore = defineStore("chatStore", {
      */
     async deleteChat(id: number) {
       this.chat = this.chat.filter((item) => item.id !== id);
-      await $fetch(`/api/chat/list/${id}`, {
+      await useNuxtApp().$api(`/api/chat/list/${id}`, {
         method: "DELETE",
       });
       if (this.active === id && this.chat.length) {
@@ -117,7 +95,7 @@ export const useChatStore = defineStore("chatStore", {
      */
     async getModels() {
       const settings = useSettings();
-      const list = await $fetch("/api/models/list", {
+      const list = await useNuxtApp().$api("/api/models/list", {
         headers: {
           ollamaUrl: settings.ollamaUrl || "",
         },

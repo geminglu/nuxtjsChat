@@ -17,11 +17,11 @@
     <div class="flex items-center mt-4">
       <div class="flex items-center flex-1 truncate">
         <UAvatar
-          src="https://avatars.githubusercontent.com/u/739984?v=4"
-          alt="Avataree"
+          :src="userStore.userInfo?.avatar"
+          :alt="userStore.userInfo?.name?.toLocaleUpperCase()"
           class="mr-2"
         />
-        <span class="truncate">zhangsanb</span>
+        <span class="truncate">{{ userStore.userInfo?.name }}</span>
       </div>
       <UButton
         class="rounded-full"
@@ -42,9 +42,15 @@ import { ref } from "vue";
 import useChatStore from "~/store/modules/chat";
 import ChatList from "~/components/chat/ChatList.vue";
 import Modal from "~/components/baseUi/modal/Modal.vue";
+import useUserStore from "~/store/modules/user";
 
 const open = ref(false);
 const settingsRef = ref();
+
+const userStore = useUserStore();
+if (import.meta.client) {
+  userStore.getUserInfo();
+}
 
 const chatStore = useChatStore();
 

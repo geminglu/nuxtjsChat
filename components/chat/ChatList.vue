@@ -75,22 +75,14 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
 import useChatStore from "~/store/modules/chat";
-import debounce from "~/utils/debounce";
 import { Confirm } from "~/components/baseUi/modal";
-import type { Options } from "ollama";
-// import { UButton } from "#build/components";
 
 const router = useRouter();
 
 const isOpen = ref(false);
 const chatStore = useChatStore();
 let deleteId: number | undefined;
-
-const chatHistory = computed(() => {
-  return chatStore.chat.find((item) => item.id === chatStore.active)?.history ?? [];
-});
 
 function isActive(id: number) {
   return chatStore.active === id;
@@ -100,7 +92,6 @@ async function handleSelect({ id }: Chat.History) {
   if (isActive(id)) return;
 
   if (chatStore.active) chatStore.updateHistory(chatStore.active, { isEdit: false });
-  router.replace(`/chat/${id}`);
   await chatStore.setActive(id);
 }
 
@@ -114,7 +105,16 @@ async function handleSave(
   event?: MouseEvent,
 ) {
   event?.stopPropagation();
-  await $fetch(`/api/chat/list/${chat.id}`, {
+  await useNuxtApp().$api<
+    Promise<{
+      id: number;
+      title: string;
+      uId: number;
+      model: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }>
+  >(`/api/chat/list/${chat.id}`, {
     method: "patch",
     body: { title: chat.title },
   });
@@ -126,19 +126,12 @@ function handleEnter(chat: Chat.Chat, isEdit: boolean, event: KeyboardEvent) {
   if (event.key === "Enter") handleSave(chat);
 }
 
-const handleDeleteDebounce = debounce(handleDelete, 600);
-
-function handleDelete(index: number, event?: MouseEvent | TouchEvent) {
-  event?.stopPropagation();
-  chatStore.deleteHistory(index);
-  // if (isMobile.value) appStore.setSiderCollapsed(true);
-}
-
 async function onConfirm() {
   if (!deleteId) return;
-  await chatStore.deleteChat(deleteId);
-  if (chatStore.active === deleteId) {
-    router.replace(`/chat/${deleteId}`);
+  try {
+    await chatStore.deleteChat(deleteId);
+  } catch (error) {
+    //
   }
 }
 </script>

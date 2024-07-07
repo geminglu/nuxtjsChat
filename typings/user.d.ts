@@ -3,5 +3,7 @@ declare namespace User {
     avatar: string;
     id: number;
     name: string;
+    createdAt: string;
+    updatedAt: string;
   }
 }

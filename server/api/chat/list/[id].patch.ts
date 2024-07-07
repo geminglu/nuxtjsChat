@@ -19,10 +19,20 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const prisma = new PrismaClient();
-  const chatList = prisma.chat.update({
-    where: { id: Number(id) },
-    data,
-  });
-  return chatList;
+  try {
+    const prisma = new PrismaClient();
+    const transaction = await prisma.$transaction(async (tx) => {
+      const chatList = await tx.chat.update({
+        where: { id: Number(id), uId: event.context.uId },
+        data,
+      });
+      return chatList;
+    });
+    return transaction;
+  } catch (error) {
+    return createError({
+      statusCode: 403,
+      message: "无权限修改",
+    });
+  }
 });

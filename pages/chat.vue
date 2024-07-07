@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from "vue-router";
 import { useBasicLayout } from "~/hooks/useBasicLayout";
 import LayoutSider from "~/components/LayoutSider/index.vue";
 import Sider from "~/components/chat/Sider.vue";
@@ -25,22 +24,29 @@ async function init() {
     if (!chat.length) {
       const chat = await chatStore.addChat();
       chatStore.setActive(chat.id);
-      router.replace(`/chat/${chat.id}`);
-      return;
-    }
-    if (chat.find((item) => item.id === +route.params.id)) {
-      chatStore.setActive(+route.params.id);
-      router.replace(`/chat/${route.params.id}`);
+      // router.replace(`/chat/${chat.id}`);
       return;
     }
     if (chat.length && !route.params.id) {
       chatStore.setActive(chat[0].id);
-      router.replace(`/chat/${chat[0].id}`);
+      // router.replace(`/chat/${chat[0].id}`);
       return;
+    }
+    if (chat.length && route.params.id) {
+      if (chat.find((item) => item.id === +route.params.id)) {
+        chatStore.setActive(+route.params.id);
+        // router.replace(`/chat/${route.params.id}`);
+        return;
+      } else {
+        chatStore.setActive(chat[0].id);
+        // router.replace(`/chat/${chat[0].id}`);
+      }
     }
   });
 }
-init();
+if (import.meta.client) {
+  init();
+}
 </script>
 
 <template>

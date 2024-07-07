@@ -4,8 +4,9 @@ export const useUserStore = defineStore("userStore", {
   }),
 
   actions: {
-    setUserInfo(userInfo: User.UserInfo) {
-      this.userInfo = userInfo;
+    async getUserInfo() {
+      const data = await useNuxtApp().$api("/api/user/userInfo");
+      this.userInfo = data || undefined;
     },
   },
 });
