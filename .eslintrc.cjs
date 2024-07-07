@@ -4,4 +4,8 @@ module.exports = {
   parserOptions: {
     parser: "@typescript-eslint/parser",
   },
+  rules: {
+    "no-console": "error",
+    "no-debugger": "error",
+  },
 };
