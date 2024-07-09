@@ -6,7 +6,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     onRequest({ options }) {
       if (!options.headers) options.headers = {};
       // @ts-ignore
-      options.headers["ollamaUrl"] = settings.ollamaUrl;
+      options.headers["settings"] = encodeURIComponent(JSON.stringify(settings));
     },
     async onResponseError({ response }) {
       const toast = useToast();
@@ -19,6 +19,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       if (response.status === 401) {
         await nuxtApp.runWithContext(() => navigateTo("/login"));
       }
+      return Promise.reject(response._data);
     },
   });
 

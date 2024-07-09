@@ -31,7 +31,14 @@
       />
     </div>
 
-    <Modal v-model="open" title="设置" :confirm="confirm">
+    <Modal
+      v-model="open"
+      title="设置"
+      :confirm="confirm"
+      :ui="{
+        width: 'lg:max-w-3xl',
+      }"
+    >
       <Settings ref="settingsRef" />
     </Modal>
   </div>
