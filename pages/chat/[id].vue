@@ -22,13 +22,17 @@
       <UDivider />
       <div :class="footerClass" class="w-full max-w-screen-xl m-auto">
         <div class="mb-1">
-          <UDropdown :items="dropdownItems" :popper="{ placement: 'bottom-start' }">
+          <UDropdown
+            :items="dropdownItems"
+            :popper="{ placement: 'bottom-start' }"
+            :ui="{ width: 'w-max' }"
+          >
             <UButton class="rounded-full mb-1 mr-1" variant="outline" title="模型" size="2xs">
               <Icon name="file-icons:robots" /><span class="leading-none">{{ chat?.model }}</span>
             </UButton>
             <template #item="{ item }">
               <div class="flex w-full justify-between">
-                <span>{{ item.label }}</span>
+                <span class="mr-2">{{ item.label }}</span>
                 <span class="text-[#9ca3af]">{{ item.size }}GB</span>
               </div>
             </template>
@@ -133,15 +137,12 @@ async function onEnter(e: KeyboardEvent) {
   };
   try {
     loading.value = true;
-    await $fetch("/api/chat", {
+    await useNuxtApp().$api("/api/chat", {
       method: "POST",
       body,
-      headers: {
-        ollamaUrl: settings.ollamaUrl || "",
-      },
     });
   } catch (error) {
-    //
+    throw Error((error as any).message);
   } finally {
     loading.value = false;
   }
