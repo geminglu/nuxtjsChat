@@ -30,6 +30,7 @@ export default defineNuxtConfig({
     "nuxt-icon",
     "@pinia-plugin-persistedstate/nuxt",
   ],
+  css: ["~/style/index.less"],
   piniaPersistedstate: {
     cookieOptions: {
       sameSite: "strict",

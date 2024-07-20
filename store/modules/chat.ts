@@ -9,10 +9,6 @@ export const useChatStore = defineStore("chatStore", {
   }),
   persist: true,
   getters: {
-    getChatHistoryByCurrentActive(state: Chat.ChatState) {
-      return state.chat.find((item) => item.id === state.active)?.history ?? [];
-    },
-
     getChat(state: Chat.ChatState) {
       return state.chat.find((item) => item.id === state.active);
     },
@@ -42,7 +38,6 @@ export const useChatStore = defineStore("chatStore", {
       this.chat.unshift({
         ...chat,
         isEdit: false,
-        history: [],
       });
       return chat;
     },
@@ -56,7 +51,6 @@ export const useChatStore = defineStore("chatStore", {
       const chat =
         data?.map((item) => ({
           ...item,
-          history: this.chat.find((c) => c.id === item.id)?.history || [],
           isEdit: false,
         })) || [];
 
@@ -64,7 +58,7 @@ export const useChatStore = defineStore("chatStore", {
       return chat;
     },
 
-    updateHistory(id: number, edit: Partial<Chat.History>) {
+    updateHistory(id: number, edit: Partial<Chat.Chat>) {
       const index = this.chat.findIndex((item) => item.id === id);
       if (index !== -1) {
         this.chat[index] = { ...this.chat[index], ...edit };
@@ -94,12 +88,7 @@ export const useChatStore = defineStore("chatStore", {
      * 获取模型
      */
     async getModels() {
-      const settings = useSettings();
-      const list = await useNuxtApp().$api("/api/models/list", {
-        headers: {
-          ollamaUrl: settings.ollamaUrl || "",
-        },
-      });
+      const list = await useNuxtApp().$api("/api/models/list");
       this.models = list;
       return list;
     },

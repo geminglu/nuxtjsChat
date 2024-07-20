@@ -5,7 +5,6 @@ import Sider from "~/components/chat/Sider.vue";
 import useChatStore from "~/store/modules/chat";
 
 const route = useRoute();
-const router = useRouter();
 
 const { isMobile } = useBasicLayout();
 

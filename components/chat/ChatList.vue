@@ -88,14 +88,14 @@ function isActive(id: number) {
   return chatStore.active === id;
 }
 
-async function handleSelect({ id }: Chat.History) {
+async function handleSelect({ id }: Chat.Chat) {
   if (isActive(id)) return;
 
   if (chatStore.active) chatStore.updateHistory(chatStore.active, { isEdit: false });
   await chatStore.setActive(id);
 }
 
-function handleEdit({ id }: Chat.History, isEdit: boolean, event?: MouseEvent) {
+function handleEdit({ id }: Chat.Chat, isEdit: boolean, event?: MouseEvent) {
   event?.stopPropagation();
   chatStore.updateHistory(id, { isEdit });
 }

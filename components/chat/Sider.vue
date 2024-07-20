@@ -55,9 +55,6 @@ const open = ref(false);
 const settingsRef = ref();
 
 const userStore = useUserStore();
-if (import.meta.client) {
-  userStore.getUserInfo();
-}
 
 const chatStore = useChatStore();
 

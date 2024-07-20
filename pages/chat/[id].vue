@@ -1,13 +1,9 @@
 <template>
   <div class="flex-1 flex flex-col">
     <main class="flex-1 h-full overflow-hidden">
-      <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
-        <div
-          id="image-wrapper"
-          class="w-full max-w-screen-xl m-auto"
-          :class="[isMobile ? 'p-2' : 'p-4']"
-        >
-          <template v-if="!dataSources.length">
+      <div class="max-h-full overflow-hidden overflow-y-auto flex flex-col-reverse">
+        <div ref="mesRef" class="w-full max-w-screen-xl m-auto" :class="[isMobile ? 'p-2' : 'p-4']">
+          <template v-if="!messages.length">
             <div
               class="flex items-center justify-center mt-4 text-center text-neutral-800 dark:text-neutral-400"
             >
@@ -15,6 +11,15 @@
               <span class="ml-2">New Chat</span>
             </div>
           </template>
+          <Message
+            v-for="m in messages"
+            :key="m.id"
+            :text="m.text"
+            :start-time="m.startTime"
+            :loading="m.loading"
+            :inversion="m.role === 'user'"
+            :error="m.error"
+          />
         </div>
       </div>
     </main>
@@ -51,8 +56,8 @@
             @keydown.enter.prevent="onEnter"
           />
           <UButton
-            :loading="loading"
-            loading-icon="i-iconoir-lens"
+            v-if="!loading"
+            title="发送"
             icon="i-iconoir-send-diagonal-solid"
             square
             variant="solid"
@@ -60,6 +65,16 @@
             @click="onEnter"
           >
             发 送
+          </UButton>
+          <UButton
+            v-else
+            title="停止"
+            icon="i-heroicons-stop-circle-20-solid"
+            square
+            variant="solid"
+            @click="stop"
+          >
+            停 止
           </UButton>
         </div>
       </div>
@@ -70,7 +85,15 @@
 <script setup lang="ts">
 import useChatStore from "~/store/modules/chat";
 import { useBasicLayout } from "~/hooks/useBasicLayout";
-import useSettings from "~/store/modules/app";
+import Message from "~/components/chat/Message";
+import db from "~/utils/clientDB";
+
+type RelevantDocument = Required<Chat.ChatHistory>;
+type ResponseRelevantDocument = {
+  type: "relevant_documents";
+  relevant_documents: RelevantDocument[];
+};
+type ResponseMessage = { message: { role: string; content: string } };
 
 const chatStore = useChatStore();
 
@@ -92,8 +115,6 @@ export interface ChatBoxFormData {
 
 const { isMobile } = useBasicLayout();
 
-const settings = useSettings();
-
 const state = reactive<ChatBoxFormData>({
   content: "",
 });
@@ -102,9 +123,12 @@ const loading = ref(false);
 /**
  * 聊天记录列表
  */
-const messages = ref<any[]>([]);
+const messages = ref<Chat.ChatHistory[]>([]);
 
-const dataSources = computed(() => chatStore.getChatHistoryByCurrentActive);
+let controller: AbortController;
+
+const mesRef = shallowRef<HTMLElement>();
+
 const chat = computed(() => chatStore.getChat);
 const footerClass = computed(() => {
   let classes = ["p-4"];
@@ -117,6 +141,9 @@ const disabledBtn = computed(() => {
   return disabled.value || !state.content.trim();
 });
 
+if (import.meta.client) {
+  getMessage(chatStore.active as number);
+}
 async function onEnter(e: KeyboardEvent) {
   e.preventDefault();
   if (
@@ -130,55 +157,129 @@ async function onEnter(e: KeyboardEvent) {
   )
     return;
 
+  mesRef.value?.scrollIntoView({ behavior: "auto", block: "end" });
+
+  controller = new AbortController();
+  const model = chat.value?.model || "";
+
+  loading.value = true;
+
+  const dateTime = new Date().toISOString();
+  messages.value.push(
+    await addMessage({
+      startTime: dateTime,
+      endTime: dateTime,
+      text: state.content,
+      loading: false,
+      role: "user",
+      model,
+      error: false,
+      chatId: chatStore.active as number,
+    }),
+  );
+
   const body = {
-    model: chat.value?.model,
-    content: state.content,
+    model,
+    family: chatStore.models.find((f) => f.name === chat.value?.model)?.details.family,
+    message: messages.value.map((i) => ({ role: i.role, content: i.text })),
     chatId: chatStore.active,
   };
+
+  /** AI开始回复 */
+  const restore = await addMessage({
+    role: "assistant",
+    model,
+    text: "",
+    startTime: dateTime,
+    endTime: "",
+    loading: true,
+    error: false,
+    chatId: chatStore.active as number,
+  });
+  const id = restore.id;
+  messages.value.push(restore);
+
+  state.content = "";
+
   try {
-    loading.value = true;
-    await useNuxtApp().$api("/api/chat", {
+    const response: ReadableStream<Uint8Array> = await useNuxtApp().$api("/api/chat", {
       method: "POST",
       body,
+      signal: controller.signal,
+      responseType: "stream",
     });
-  } catch (error) {
-    throw Error((error as any).message);
+
+    const reader = response.getReader();
+    let prevPart = "";
+    const splitter = " \n\n";
+    let msgContent = "";
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const { value, done } = await reader.read().catch((err: any) => {
+        if (err.name !== "AbortError") {
+          throw err;
+        }
+        return { done: true, value: undefined };
+      });
+
+      if (done) {
+        const messageItem = messages.value.find((item) => item.id === id);
+        if (messageItem) {
+          messageItem.text = msgContent;
+          messageItem.endTime = new Date().toISOString();
+          messageItem.loading = false;
+          updataMEssage(id, messageItem);
+        }
+        break;
+      }
+      const chunk = prevPart + new TextDecoder().decode(value);
+      if (!chunk.includes(splitter)) {
+        prevPart = chunk;
+        continue;
+      }
+      prevPart = "";
+
+      const chatMessage = JSON.parse(chunk) as ResponseMessage | ResponseRelevantDocument;
+      const isMessage = !("type" in chatMessage) && "message" in chatMessage;
+
+      if (isMessage) {
+        msgContent += chatMessage.message.content;
+        const messageItem = messages.value.find((item) => item.id === id);
+        messageItem && (messageItem.text = msgContent);
+      }
+    }
+  } catch (error: any) {
+    const messageItem = messages.value.find((item) => item.id === id);
+    if (messageItem) {
+      messageItem.text = error.message;
+      messageItem.endTime = new Date().toISOString();
+      messageItem.loading = false;
+    }
+
+    throw Error(error.message);
   } finally {
     loading.value = false;
   }
 }
 
-// const fetchStream = async (url: string | URL | Request, options: any) => {
-//   const response = await $fetch(url, options);
+function stop() {
+  controller.abort();
+}
 
-//   if (response.body) {
-//     const reader = response.body.getReader();
-//     // eslint-disable-next-line no-constant-condition
-//     while (true) {
-//       const { done, value } = await reader.read();
-//       if (done) break;
+async function addMessage(data: Omit<Chat.ChatHistory, "id">): Promise<Chat.ChatHistory> {
+  return {
+    ...data,
+    id: await db.ChatHistory.add(data),
+  };
+}
 
-//       const chunk = new TextDecoder().decode(value);
-//       chunk.split("\n\n").forEach(async (line) => {
-//         if (line) {
-//           console.log("line: ", line);
-//           const chatMessage = JSON.parse(line);
-//           const content = chatMessage?.message?.content;
-//           if (content) {
-//             if (
-//               messages.value.length > 0 &&
-//               messages.value[messages.value.length - 1].role === "assistant"
-//             ) {
-//               messages.value[messages.value.length - 1].content += content;
-//             } else {
-//               messages.value.push({ role: "assistant", content });
-//             }
-//           }
-//         }
-//       });
-//     }
-//   } else {
-//     console.log("The browser doesn't support streaming responses.");
-//   }
-// };
+async function updataMEssage(id: number, data: Omit<Chat.ChatHistory, "id">) {
+  await db.ChatHistory.where(":id").equals(id).modify(data);
+}
+
+async function getMessage(chatId: number) {
+  const res = (await db.ChatHistory.where({ chatId }).toArray()) as unknown as Chat.ChatHistory[];
+
+  messages.value.push(...res.map((i) => ({ ...i, loading: false })));
+}
 </script>

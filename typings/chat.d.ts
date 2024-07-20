@@ -5,13 +5,18 @@ declare namespace Chat {
     title: string;
     isEdit: boolean;
     model: string;
-    history: History[];
   }
 
-  interface History {
-    title: string;
-    isEdit: boolean;
+  interface ChatHistory {
+    startTime: string;
+    endTime: string;
+    text: string;
     id: number;
+    role: "user" | "assistant";
+    model: string;
+    loading: boolean;
+    error: boolean;
+    chatId: number;
   }
 
   interface ChatState {
