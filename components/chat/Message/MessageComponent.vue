@@ -27,8 +27,7 @@
           :loading="loading"
           :as-raw-text="asRawText"
         />
-        <div class="flex flex-col">
-        </div>
+        <!-- <div class="flex flex-col"></div> -->
       </div>
     </div>
   </div>
@@ -48,17 +47,10 @@ interface Props {
   isDate?: boolean;
 }
 
-interface Emit {
-  (ev: "regenerate"): void;
-  (ev: "delete"): void;
-}
-
 defineOptions({
   name: "Message",
 });
-const props = defineProps<Props>();
-
-const emit = defineEmits<Emit>();
+defineProps<Props>();
 
 const asRawText = ref(false);
 </script>

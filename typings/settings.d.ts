@@ -52,4 +52,7 @@ declare namespace Settings {
     //   models: string[];
     // }>;
   }
+  interface settings {
+    modelaKey: ModelaKeyType;
+  }
 }

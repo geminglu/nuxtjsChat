@@ -202,7 +202,7 @@ async function onEnter(e: KeyboardEvent) {
   state.content = "";
 
   try {
-    const response: ReadableStream<Uint8Array> = await useNuxtApp().$api("/api/chat", {
+    const response = await useNuxtApp().$api<ReadableStream>("/api/chat", {
       method: "POST",
       body,
       signal: controller.signal,

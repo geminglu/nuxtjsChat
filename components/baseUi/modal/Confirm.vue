@@ -37,8 +37,6 @@ const open = computed({
   },
 });
 
-const loading = ref(false);
-
 const icons = computed(() => {
   const icons: { icon: string; color: string } = {
     icon: "i-clarity:success-standard-line",

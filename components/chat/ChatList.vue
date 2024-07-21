@@ -78,8 +78,6 @@
 import useChatStore from "~/store/modules/chat";
 import { Confirm } from "~/components/baseUi/modal";
 
-const router = useRouter();
-
 const isOpen = ref(false);
 const chatStore = useChatStore();
 let deleteId: number | undefined;

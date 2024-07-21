@@ -63,11 +63,11 @@
                 <UInput v-model="modelaKey.openai.key" />
               </UFormGroup>
             </CardList>
-            <CardList>
+            <!-- <CardList>
               <UFormGroup label="OpenAi Proxy" class="form_group">
                 <UInput v-model="modelaKey.openai.proxy" />
               </UFormGroup>
-            </CardList>
+            </CardList> -->
           </template>
         </Card>
       </UForm>
@@ -101,7 +101,7 @@ const settings = useSettings();
 const userStore = useUserStore();
 
 const modelaKey = reactive<Settings.ModelaKeyType>({
-  ...JSON.parse(JSON.stringify(settings.$state.modelaKey)),
+  ...JSON.parse(JSON.stringify(settings.$state.modelaKey || {})),
 });
 
 function onSubmit() {

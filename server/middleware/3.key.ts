@@ -1,8 +1,9 @@
 export default defineEventHandler(async (event) => {
   const settings = event.headers.get("settings");
-  const data = (JSON.parse(decodeURIComponent(settings || "") || "{}").modelaKey ||
-    {}) as Settings.ModelaKeyType;
+  const { modelaKey } = (JSON.parse(decodeURIComponent(settings || "") || "{}") ||
+    {}) as Settings.settings;
+
   event.context.keys = {
-    ...data,
+    ...modelaKey,
   };
 });

@@ -6,7 +6,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     onRequest({ options }) {
       if (!options.headers) options.headers = {};
       // @ts-ignore
-      options.headers["settings"] = encodeURIComponent(JSON.stringify(settings));
+      options.headers["settings"] = encodeURIComponent(JSON.stringify(settings.$state));
     },
     async onResponseError({ response }) {
       let data;

@@ -1,5 +1,3 @@
-import useSettings from "./app";
-
 export const useChatStore = defineStore("chatStore", {
   state: (): Chat.ChatState => ({
     active: null,

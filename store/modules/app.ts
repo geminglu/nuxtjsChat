@@ -1,9 +1,5 @@
-export interface SettingsType {
-  modelaKey: Settings.ModelaKeyType;
-}
-
 export const useSettings = defineStore("useSettings", {
-  state: (): SettingsType => ({
+  state: (): Settings.settings => ({
     modelaKey: {
       ollama: {
         enable: false,
