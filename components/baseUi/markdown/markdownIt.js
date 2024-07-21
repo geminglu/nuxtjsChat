@@ -41,6 +41,6 @@ export default function markdown() {
   return mdi;
 }
 
-function highlightBlock(str: string, lang?: string) {
+function highlightBlock(str, lang) {
   return `<pre class="code-block-wrapper"><div class="code-block-header"><span class="code-block-header__lang">${lang}</span><span class="code-block-header__copy"></span></div><code class="hljs code-block-body ${lang}">${str}</code></pre>`;
 }
