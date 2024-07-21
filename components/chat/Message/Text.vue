@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <div :class="wrapClass">
-    <div v-if="!loading" class="leading-relaxed break-words">
+    <div v-if="!(!text.length && loading)" class="leading-relaxed break-words">
       <div v-if="!inversion">
         <MD v-if="!asRawText" :text="text" :loading="loading" />
         <div v-else class="" v-html="text" />
