@@ -4,7 +4,11 @@ import { createError } from "h3";
 export default defineEventHandler(async (event) => {
   const whiteList = ["/api/auth/signIn", "/api/models/list"];
 
-  if (event.path.includes("/api") && !whiteList.includes(event.path)) {
+  if (
+    event.path.includes("/api") &&
+    !whiteList.includes(event.path) &&
+    !event.path.includes("/api/content")
+  ) {
     const assessToken = getCookie(event, "assessToken");
     try {
       const data: any = verifyToken(assessToken || "Bearer ");
