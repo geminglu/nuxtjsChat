@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Modal from "./Modal.vue";
+import Modal from "./ModalCom.vue";
 
 const props = defineProps({
   modelValue: {

@@ -48,7 +48,7 @@
 import { ref } from "vue";
 import useChatStore from "~/store/modules/chat";
 import ChatList from "~/components/chat/ChatList.vue";
-import Modal from "~/components/baseUi/modal/Modal.vue";
+import Modal from "~/components/baseUi/modal/ModalCom.vue";
 import useUserStore from "~/store/modules/user";
 
 const open = ref(false);
