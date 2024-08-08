@@ -88,11 +88,6 @@ import { useBasicLayout } from "~/hooks/useBasicLayout";
 import Message from "~/components/chat/Message";
 import db from "~/utils/clientDB";
 
-type RelevantDocument = Required<Chat.ChatHistory>;
-type ResponseRelevantDocument = {
-  type: "relevant_documents";
-  relevant_documents: RelevantDocument[];
-};
 type ResponseMessage = { message: { role: string; content: string } };
 
 const chatStore = useChatStore();
@@ -210,8 +205,8 @@ async function onEnter(e: KeyboardEvent) {
     });
 
     const reader = response.getReader();
-    let prevPart = "";
-    const splitter = " \n\n";
+    // let prevPart = "";
+    // const splitter = " \n\n";
     let msgContent = "";
     // eslint-disable-next-line no-constant-condition
     while (true) {
@@ -225,28 +220,21 @@ async function onEnter(e: KeyboardEvent) {
       if (done) {
         const messageItem = messages.value.find((item) => item.id === id);
         if (messageItem) {
-          messageItem.text = msgContent;
+          // messageItem.text = msgContent;
           messageItem.endTime = new Date().toISOString();
           messageItem.loading = false;
           updataMEssage(id, messageItem);
         }
         break;
       }
-      const chunk = prevPart + new TextDecoder().decode(value);
-      if (!chunk.includes(splitter)) {
-        prevPart = chunk;
-        continue;
-      }
-      prevPart = "";
+      const chunk = new TextDecoder().decode(value);
 
-      const chatMessage = JSON.parse(chunk) as ResponseMessage | ResponseRelevantDocument;
-      const isMessage = !("type" in chatMessage) && "message" in chatMessage;
+      const chatMessage = JSON.parse(chunk) as ResponseMessage;
+      // const isMessage = !("type" in chatMessage) && "message" in chatMessage;
 
-      if (isMessage) {
-        msgContent += chatMessage.message.content;
-        const messageItem = messages.value.find((item) => item.id === id);
-        messageItem && (messageItem.text = msgContent);
-      }
+      msgContent += chatMessage.message.content;
+      const messageItem = messages.value.find((item) => item.id === id);
+      messageItem && (messageItem.text = msgContent);
     }
   } catch (error: any) {
     const messageItem = messages.value.find((item) => item.id === id);
