@@ -87,7 +87,7 @@ export const useChatStore = defineStore("chatStore", {
      */
     async getModels() {
       const list = await useNuxtApp().$api("/api/models/list");
-      this.models = list;
+      this.models = list.filter((f) => f.details.family !== "nomic-bert");
       return list;
     },
   },
