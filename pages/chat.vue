@@ -49,20 +49,22 @@ if (import.meta.client) {
 </script>
 
 <template>
-  <div class="h-full dark:bg-[#24272e] transition-all" :class="[isMobile ? 'p-0' : 'p-8']">
-    <div
-      class="h-full overflow-hidden transition-all flex dark:bg-zinc-950"
-      :class="getMobileClass"
-    >
-      <LayoutSider
-        :width="300"
-        :resizable="{ min: 200, max: 300 }"
-        collapsible
-        class="dark:bg-zinc-900"
+  <NuxtLayout>
+    <div class="h-full dark:bg-[#24272e] transition-all" :class="[isMobile ? 'p-0' : 'p-8']">
+      <div
+        class="h-full overflow-hidden transition-all flex dark:bg-zinc-950"
+        :class="getMobileClass"
       >
-        <Sider />
-      </LayoutSider>
-      <NuxtPage />
+        <LayoutSider
+          :width="300"
+          :resizable="{ min: 200, max: 300 }"
+          collapsible
+          class="dark:bg-zinc-900"
+        >
+          <Sider />
+        </LayoutSider>
+        <NuxtPage />
+      </div>
     </div>
-  </div>
+  </NuxtLayout>
 </template>

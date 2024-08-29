@@ -31,13 +31,9 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="h-screen">
+  <div class="h-full">
     <NuxtLoadingIndicator />
-
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-
+    <NuxtPage />
     <UNotifications />
     <UModals />
   </div>

@@ -57,7 +57,8 @@
     "ollama": "^0.5.0",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "vue3-smooth-dnd": "^0.0.6"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.2.0",
