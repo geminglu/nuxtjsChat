@@ -13,6 +13,15 @@ export default defineEventHandler(async (event) => {
     try {
       const data: any = verifyToken(assessToken || "Bearer ");
       event.context.uId = data.id;
+      const user = await prisma.user.findUnique({ where: { id: event.context.uId } });
+      if (!user) {
+        throw createError({
+          status: 401,
+          statusMessage: "用户不存在",
+          message: "用户不存在",
+        });
+      }
+      event.context.userInfo = user;
     } catch (error: any) {
       throw createError({
         status: 401,
