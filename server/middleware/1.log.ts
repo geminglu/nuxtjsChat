@@ -1,3 +1,6 @@
+import logger from "../utils/logger";
+
 export default defineEventHandler((event) => {
-  console.log("New request: " + getRequestURL(event));
+  const loggerin = logger("request");
+  loggerin.info(event.toJSON());
 });
