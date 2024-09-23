@@ -1,4 +1,5 @@
 import db from "./db";
+import authKey from "./authKey";
 
 const privateKey = {
   /**
@@ -18,5 +19,6 @@ export const config = {
 export default {
   db,
   privateKey,
+  authKey,
   ...config,
 };

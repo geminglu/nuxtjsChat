@@ -2,11 +2,18 @@ import { verifyToken } from "../api/auth/signIn.post";
 import { createError } from "h3";
 
 export default defineEventHandler(async (event) => {
-  const whiteList = ["/api/auth/signIn", "/api/models/list"];
+  const whiteList = [
+    "/api/auth/signIn",
+    "/api/models/list",
+    "/api/auth/microsoft/signin",
+    "/api/auth/microsoft/redirect",
+  ];
+
+  const uri = getRequestURL(event);
 
   if (
-    event.path.includes("/api") &&
-    !whiteList.includes(event.path) &&
+    uri.pathname.includes("/api") &&
+    !whiteList.includes(uri.pathname) &&
     !event.path.includes("/api/content")
   ) {
     const assessToken = getCookie(event, "assessToken");

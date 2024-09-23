@@ -14,6 +14,9 @@ export default defineNuxtConfig({
       enabled: true,
     },
   },
+  devServer: {
+    host: "0.0.0.0",
+  },
   typescript: {
     typeCheck: true,
   },

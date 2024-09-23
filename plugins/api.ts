@@ -9,6 +9,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       options.headers["settings"] = encodeURIComponent(JSON.stringify(settings.$state));
     },
     async onResponseError({ response }) {
+      const route = useRoute();
       let data;
       if (response._data instanceof ReadableStream) {
         const reader = response._data.getReader();
@@ -28,6 +29,13 @@ export default defineNuxtPlugin((nuxtApp) => {
         data = response._data;
       }
 
+      if (response.status === 401) {
+        await nuxtApp.runWithContext(() =>
+          navigateTo(`/login/?redirectUri=${route.fullPath}`, { replace: true }),
+        );
+        return;
+      }
+
       const toast = useToast();
       toast.add({
         color: "red",
@@ -35,9 +43,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         description: data.message,
         icon: "i-heroicons-x-mark-20-solid",
       });
-      if (response.status === 401) {
-        await nuxtApp.runWithContext(() => navigateTo("/login"));
-      }
       return Promise.reject(response._data);
     },
   });
