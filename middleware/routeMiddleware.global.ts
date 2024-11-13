@@ -1,12 +1,11 @@
 export default defineNuxtRouteMiddleware(async (to, _from) => {
   const router = useRouter();
   if (import.meta.client) {
-    const isNewUSer = useCookie("isNewUSer");
-
+    const isNewUSer = localStorage.getItem("isNewUSer");
     // isNewUSer不存在时表示用户时第一次访问
-    if (!isNewUSer.value) {
-      await useNuxtApp().$api("/api/auth/signIn", { method: "POST", server: false });
-      isNewUSer.value = "true";
+    if (!isNewUSer) {
+      await useNuxtApp().$api("/api/auth/autoRegistration", { method: "POST", server: false });
+      localStorage.setItem("isNewUSer", "true");
     }
   }
   if (to.query.assessToken) {

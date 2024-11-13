@@ -34,12 +34,14 @@ model ChatHistory {
 model User {
     id            Int             @id @default(autoincrement())
     name          String
+    password      String?
     avatar        String
     Chat          Chat[]
     createdAt     DateTime        @default(now())
     updatedAt     DateTime        @updatedAt
     KnowledgeBase KnowledgeBase[]
     microsoftOid  String?         @unique
+    googleSub     String?         @unique
 }
 
 model Upload {

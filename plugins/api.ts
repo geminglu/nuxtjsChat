@@ -2,13 +2,33 @@ import useSettings from "~/store/modules/app";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const settings = useSettings();
+  let refreshTokenPromise: Promise<any> | null = null;
+
+  async function handleTokenRefresh(api: ReturnType<typeof $fetch.create>) {
+    if (!refreshTokenPromise) {
+      refreshTokenPromise = api("/api/auth/refreshToken")
+        .then((result) => {
+          if (!result.success) {
+            throw new Error("Failed to refresh token");
+          }
+          return result;
+        })
+        .finally(() => {
+          refreshTokenPromise = null; // 重置状态
+        });
+    }
+
+    return refreshTokenPromise;
+  }
+
   const api = $fetch.create({
     onRequest({ options }) {
-      if (!options.headers) options.headers = {};
-      // @ts-ignore
-      options.headers["settings"] = encodeURIComponent(JSON.stringify(settings.$state));
+      const headers = new Headers(options.headers);
+      headers.set("settings", encodeURIComponent(JSON.stringify(settings.$state)));
+      options.headers = headers;
     },
-    async onResponseError({ response }) {
+
+    async onResponseError({ options, response }) {
       const route = useRoute();
       let data;
       if (response._data instanceof ReadableStream) {
@@ -30,20 +50,26 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
 
       if (response.status === 401) {
-        await nuxtApp.runWithContext(() =>
-          navigateTo(`/login/?redirectUri=${route.fullPath}`, { replace: true }),
-        );
-        return;
+        try {
+          await handleTokenRefresh(api);
+          // 如果刷新成功，重新发起原始请求
+          options.retryStatusCodes = [401];
+          options.retryDelay = 0;
+          options.retry = 1;
+        } catch (error) {
+          await nuxtApp.runWithContext(() =>
+            navigateTo(`/login/?redirectUri=${route.fullPath}`, { replace: true }),
+          );
+        }
+      } else {
+        const toast = useToast();
+        toast.add({
+          color: "red",
+          title: `${response.status} ${response.statusText}`,
+          description: data.message,
+          icon: "i-heroicons-x-mark-20-solid",
+        });
       }
-
-      const toast = useToast();
-      toast.add({
-        color: "red",
-        title: `${response.status} ${response.statusText}`,
-        description: data.message,
-        icon: "i-heroicons-x-mark-20-solid",
-      });
-      return Promise.reject(response._data);
     },
   });
 

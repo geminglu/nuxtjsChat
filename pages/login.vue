@@ -1,11 +1,6 @@
 <template>
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <img
-        class="mx-auto h-10 w-auto"
-        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-        alt="Your Company"
-      />
       <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
         Sign in to your account
       </h2>
@@ -29,7 +24,7 @@
           eager-validation
           :ui="{ wrapper: 'relative', error: 'absolute mt-1' }"
         >
-          <UInput v-model="state.password" placeholder="请输入密码" />
+          <UInput v-model="state.password" type="password" placeholder="请输入密码" />
         </UFormGroup>
         <UFormGroup :ui="{ wrapper: 'text-end' }">
           <ULink
@@ -41,7 +36,9 @@
             忘记密码
           </ULink>
         </UFormGroup>
-        <UButton type="submit" block size="xl"> 登 录 </UButton>
+        <UButton type="submit" block size="xl" :loading="loginLoading" :disabled="loginLoading">
+          登 录
+        </UButton>
       </UForm>
       <UDivider label="OR" :ui="{ wrapper: { base: 'my-8' } }" />
       <div class="">
@@ -68,13 +65,17 @@
 
 <script lang="ts" setup>
 import { z } from "zod";
-import type { FormSubmitEvent, ButtonSize } from "#ui/types";
+import useUserStore from "@/store/modules/user";
 
 defineOptions({
   name: "SignIn",
 });
 
+const userStore = useUserStore();
+const loginLoading = ref(false);
+
 const route = useRoute();
+const router = useRouter();
 const buttonUi = {
   color: "gray",
   size: "xl" as ButtonSize,
@@ -95,7 +96,15 @@ const state = reactive({
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  //
+  try {
+    loginLoading.value = true;
+    await userStore.login(event.data.username, event.data.password);
+    router.replace({ path: (route.query.redirectUri as string) || "/" });
+  } catch (error: any) {
+    throw new Error(error);
+  } finally {
+    loginLoading.value = false;
+  }
 }
 
 /**

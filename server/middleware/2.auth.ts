@@ -7,6 +7,10 @@ export default defineEventHandler(async (event) => {
     "/api/models/list",
     "/api/auth/microsoft/signin",
     "/api/auth/microsoft/redirect",
+    "/api/auth/refreshToken",
+    "/api/auth/register",
+    "/api/auth/getPublicKey",
+    "/api/auth/autoRegistration",
   ];
 
   const uri = getRequestURL(event);
@@ -24,8 +28,8 @@ export default defineEventHandler(async (event) => {
       if (!user) {
         throw createError({
           status: 401,
-          statusMessage: "用户不存在",
-          message: "用户不存在",
+          statusMessage: "用户未登录",
+          message: "用户未登录",
         });
       }
       event.context.userInfo = user;
