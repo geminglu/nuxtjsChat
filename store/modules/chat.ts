@@ -32,7 +32,6 @@ export const useChatStore = defineStore("chatStore", {
         method: "POST",
         body: { title: title, model: this.models[0].name },
       });
-
       this.chat.unshift({
         ...chat,
         isEdit: false,

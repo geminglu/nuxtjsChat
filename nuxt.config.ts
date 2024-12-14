@@ -47,9 +47,7 @@ export default defineNuxtConfig({
       baseURL: "/api/content",
     },
   },
-  ui: {
-    icons: ["heroicons", "iconoir"],
-  },
+  ui: {},
   nitro: {
     experimental: {
       asyncContext: true,

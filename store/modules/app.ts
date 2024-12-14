@@ -3,7 +3,7 @@ export const useSettings = defineStore("useSettings", {
     modelaKey: {
       ollama: {
         enable: false,
-        url: "" || "http://localhost:11434",
+        url: "http://localhost:11434",
         username: "",
         password: "",
       },

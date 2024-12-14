@@ -4,7 +4,7 @@ import type { User } from "@prisma/client";
 
 interface Context {
   keys: Settings.ModelaKeyType;
-  uId: number;
+  uId?: number;
   userInfo: User;
 }
 declare module "h3" {

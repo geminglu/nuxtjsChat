@@ -18,7 +18,7 @@ import type { DashboardSidebarLink } from "~/components/baseUi/dashboard/type";
 const links: DashboardSidebarLink[] = [
   {
     label: "知识库",
-    icon: "i-heroicons-book-open",
+    icon: "i-iconoir-book",
     to: "/Managerial/knowledgeBase",
   },
 ];

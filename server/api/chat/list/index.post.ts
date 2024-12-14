@@ -13,9 +13,10 @@ export default defineEventHandler(async (event) => {
     body.model = (await ollama.list()).models[0].name;
   }
 
-  const chat = prisma.chat.create({
-    data: { title: body.title, model: body.model, uId: event.context.uId },
-  });
-
-  return chat;
+  if (event.context.uId) {
+    const chat = await prisma.chat.create({
+      data: { title: body.title, model: body.model, uId: event.context.uId },
+    });
+    return chat;
+  }
 });

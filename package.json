@@ -42,6 +42,7 @@
     "dayjs": "^1.11.13",
     "dexie": "^4.0.8",
     "formidable": "^3.5.1",
+    "google-auth-library": "^9.14.2",
     "highlight.js": "^11.10.0",
     "jsencrypt": "^3.3.2",
     "jsonwebtoken": "^9.0.2",
