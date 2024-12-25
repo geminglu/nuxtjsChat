@@ -42,7 +42,7 @@
       </UForm>
       <UDivider label="OR" :ui="{ wrapper: { base: 'my-8' } }" />
       <div class="">
-        <UButton v-bind="buttonUi" @click="handelMicrosoftSignIn">
+        <!-- <UButton v-bind="buttonUi" @click="handelMicrosoftSignIn">
           <icon name="logos:microsoft-icon" />
           使用 Microsoft 账号登录
         </UButton>
@@ -57,7 +57,7 @@
         <UButton v-bind="buttonUi">
           <icon name="logos:github-icon" />
           使用 Github 登录
-        </UButton>
+        </UButton> -->
       </div>
     </div>
   </div>
@@ -76,26 +76,26 @@ const loginLoading = ref(false);
 
 const route = useRoute();
 const router = useRouter();
-const buttonUi = {
-  color: "gray",
-  size: "xl" as ButtonSize,
-  block: true,
-  ui: { base: "mb-4" },
-};
+// const buttonUi = {
+//   color: "gray",
+//   size: "xl",
+//   block: true,
+//   ui: { base: "mb-4" },
+// };
 
 const schema = z.object({
   username: z.string().min(2, "必须在2-10个字符之间").max(10, "必须在2-10个字符之间"),
   password: z.string().min(6, "必须在6-18个字符之间").max(10, "必须在6-18个字符之间"),
 });
 
-type Schema = z.output<typeof schema>;
+// type Schema = z.output<typeof schema>;
 
 const state = reactive({
   username: "",
   password: "",
 });
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event: { data: { username: string; password: string } }) {
   try {
     loginLoading.value = true;
     await userStore.login(event.data.username, event.data.password);
@@ -110,18 +110,18 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 /**
  * 微软账号登录
  */
-async function handelMicrosoftSignIn() {
-  try {
-    const authCodeUrlResponse = await useNuxtApp().$api("/api/auth/microsoft/signin", {
-      params: { redirectUrl: route.query.redirectUri || location.origin },
-    });
+// async function handelMicrosoftSignIn() {
+//   try {
+//     const authCodeUrlResponse = await useNuxtApp().$api("/api/auth/microsoft/signin", {
+//       params: { redirectUrl: route.query.redirectUri || location.origin },
+//     });
 
-    location.replace(authCodeUrlResponse);
-  } catch (error: any) {
-    sessionStorage.removeItem("msal.interaction.status");
-    throw new Error(error);
-  }
-}
+//     location.replace(authCodeUrlResponse);
+//   } catch (error: any) {
+//     sessionStorage.removeItem("msal.interaction.status");
+//     throw new Error(error);
+//   }
+// }
 </script>
 
 <style></style>

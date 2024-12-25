@@ -4,7 +4,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   const settings = useSettings();
   let refreshTokenPromise: Promise<any> | null = null;
 
-  async function handleTokenRefresh(api: ReturnType<typeof $fetch.create>) {
+  function handleTokenRefresh(api: ReturnType<typeof $fetch.create>) {
     if (!refreshTokenPromise) {
       refreshTokenPromise = api("/api/auth/refreshToken")
         .then((result) => {
@@ -35,7 +35,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         const reader = response._data.getReader();
         const decoder = new TextDecoder("utf-8");
         let chunk = "";
-        // eslint-disable-next-line no-constant-condition
+         
         while (true) {
           const { done, value } = await reader.read();
           if (done) {
@@ -56,6 +56,7 @@ export default defineNuxtPlugin((nuxtApp) => {
           options.retryStatusCodes = [401];
           options.retryDelay = 0;
           options.retry = 1;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           await nuxtApp.runWithContext(() =>
             navigateTo(`/login/?redirectUri=${route.fullPath}`, { replace: true }),

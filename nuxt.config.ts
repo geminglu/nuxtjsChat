@@ -23,11 +23,10 @@ export default defineNuxtConfig({
   modules: [
     "@pinia/nuxt",
     "@nuxt/ui",
-    "@nuxtjs/eslint-module",
     "@nuxt/content",
     "@vueuse/nuxt",
-    "nuxt-icon",
     "@pinia-plugin-persistedstate/nuxt",
+    "@nuxt/eslint",
   ],
   css: ["~/style/index.less"],
   piniaPersistedstate: {
@@ -47,10 +46,13 @@ export default defineNuxtConfig({
       baseURL: "/api/content",
     },
   },
-  ui: {},
+  ui: {
+    // icons: ["heroicons", "iconoir"],
+  },
   nitro: {
     experimental: {
       asyncContext: true,
     },
   },
+  compatibilityDate: "2024-12-23",
 });

@@ -43,7 +43,7 @@ export const useUserStore = defineStore("userStore", {
      */
     async genPublicKey() {
       const publicKey = await useNuxtApp().$api("/api/auth/getPublicKey");
-      this.publicKey = publicKey;
+      this.publicKey = publicKey || "";
       return publicKey;
     },
   },

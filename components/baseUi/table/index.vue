@@ -110,7 +110,7 @@
             inputmode="numeric"
             class="numeric relative block w-14 disabled:cursor-not-allowed disabled:opacity-75 focus:outline-none border-0 form-input rounded-md placeholder-gray-400 dark:placeholder-gray-500 text-sm px-2.5 py-1.5 shadow-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-700 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 text-center"
             @change="(e: Event) => handleCurrentChange((e.target as HTMLInputElement).value as unknown as number)"
-          />
+          >
         </span>
       </template>
     </div>
@@ -118,9 +118,9 @@
 </template>
 
 <script setup lang="tsx">
-import type { DateSetType, headerButtonsType } from "~/composables/DateSet/type";
 import type { Form } from "#ui/types";
 import dayjs from "dayjs";
+import type { DateSetType, headerButtonsType } from "~/composables/DateSet/type";
 
 defineOptions({
   name: "BaseTable",
@@ -218,10 +218,6 @@ const form = ref<Schema>({ ...formQuery });
 async function query() {
   await props.dateSet.query();
 }
-
-const handleSelectionChange = (val: any) => {
-  props.dateSet.setMultipleSelection(val);
-};
 
 /**
  * 查询按钮的处理事件

@@ -153,6 +153,7 @@
               :ui="ui"
               @update:links="emit('update:links', $event)"
             >
+              <!-- @vue-ignore -->
               <template v-for="(_, name) in $slots" #[name]="slotData: any">
                 <slot :name="name" v-bind="slotData" />
               </template>

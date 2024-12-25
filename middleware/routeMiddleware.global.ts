@@ -1,4 +1,4 @@
-export default defineNuxtRouteMiddleware(async (to, _from) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   const router = useRouter();
   if (import.meta.client) {
     const isNewUSer = localStorage.getItem("isNewUSer");
