@@ -92,7 +92,7 @@
             />
           </label>
           <label
-            title="删除"
+            :title="$t('common.delete')"
             class="hidden absolute right-2 hover:text-rose-500 cursor-pointer transition remove"
             @click="handleRemove(file)"
           >

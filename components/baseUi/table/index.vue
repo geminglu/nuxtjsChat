@@ -26,10 +26,10 @@
               :ui="{ base: 'mr-2' }"
               @click="resetForm"
             >
-              {{ clearText }}
+              {{ clearText || $t("common.reset") }}
             </UButton>
             <UButton type="submit" :disabled="dateSet.loading.value" :loading="loading">
-              {{ searchText }}
+              {{ searchText || $t("common.search") }}
             </UButton>
           </div>
         </div>
@@ -40,7 +40,7 @@
         <UButton
           v-if="typeof item === 'string' && item === 'refresh'"
           icon="i-heroicons-arrow-path-20-solid"
-          label="刷新"
+          :label="$t('common.refresh')"
           :disabled="dateSet.loading.value"
           @click="query"
         />
@@ -80,13 +80,17 @@
       class="flex justify-end items-center flex-wrap py-3.5 border-t text-sm border-gray-200 dark:border-gray-700"
     >
       <template v-for="item in pagingLayout.replaceAll(' ', '').split(',')" :key="item">
-        <span v-if="item === 'total'" class="ml-4">{{ pagingTotalText }} {{ dateSet.total }}</span>
+        <span v-if="item === 'total'" class="ml-4">
+          {{ $t("table.total", { total: dateSet.total }) }}
+        </span>
         <USelect
           v-if="item === 'sizes'"
           v-model="pageSize"
           :disabled="dateSet.loading.value"
           class="ml-4 w-24"
-          :options="dateSet.pageSizes.map((item) => ({ label: `${item}/页`, value: item }))"
+          :options="
+            dateSet.pageSizes.map((item) => ({ label: `${item}/${$t('table.page')}`, value: item }))
+          "
           @update:model-value="handleSizeChange"
         />
         <UPagination
@@ -154,11 +158,11 @@ const props = defineProps({
   /** 搜索按钮描述 */
   searchText: {
     type: String,
-    default: "查 询",
+    default: "",
   },
   clearText: {
     type: String,
-    default: "重 置",
+    default: "",
   },
   divider: {
     type: String,
@@ -174,10 +178,6 @@ const props = defineProps({
   pagingMax: {
     type: Number,
     default: 7,
-  },
-  pagingTotalText: {
-    type: String,
-    default: "总数",
   },
 });
 

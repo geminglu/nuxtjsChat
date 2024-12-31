@@ -1,10 +1,14 @@
 <template>
   <div>
     <steps :steps="stepsv" :active="active" />
-    <UButton v-if="active !== 0" @click="next(-1)">上一步</UButton>
-    <UButton v-if="active !== stepsv.length" @click="next(1)">下一步</UButton>
+    <UButton v-if="active !== 0" @click="next(-1)">{{
+      $t("knowledge_base.previous_step")
+    }}</UButton>
+    <UButton v-if="active !== stepsv.length" @click="next(1)">{{
+      $t("knowledge_base.next_step")
+    }}</UButton>
     <div>
-      <h2 class="text-lg font-semibold">选择数据源</h2>
+      <h2 class="text-lg font-semibold">{{ $t("knowledge_base.select_data_source") }}</h2>
       <ul class="list-none flex">
         <li
           :class="`${ui.sourcesList} ${dataSourceType === 'upload_file' && ui.active}`"
@@ -13,7 +17,7 @@
           <div :class="ui.sourcesIcon">
             <Icon name="mdi:file-document" class="text-primary w-6 h-6" />
           </div>
-          <span class="align-middle">导入文件</span>
+          <span class="align-middle">{{ $t("knowledge_base.import_file") }}</span>
         </li>
         <li
           :class="`${ui.sourcesList} ${dataSourceType === 'yuque' && ui.active}`"
@@ -23,7 +27,7 @@
           <div :class="ui.sourcesIcon">
             <img src="/assets/svg/yuque.svg" class="w-6 align-middle inline-block" />
           </div>
-          <span class="align-middle">同步自语雀文档</span>
+          <span class="align-middle">{{ $t("knowledge_base.sync_yuque") }}</span>
         </li>
         <li
           :class="`${ui.sourcesList} ${dataSourceType === 'web' && ui.active}`"
@@ -33,7 +37,7 @@
           <div :class="ui.sourcesIcon">
             <Icon name="mdi:web" class="text-primary w-6 h-6" />
           </div>
-          <span class="align-middle">同步自Web站点</span>
+          <span class="align-middle">{{ $t("knowledge_base.sync_web") }}</span>
         </li>
       </ul>
     </div>
@@ -110,19 +114,21 @@ import type { UploadInstance, uploadProps, UploadUserFile } from "~/components/b
 defineOptions({
   name: "KnowledgeBaseCreate",
 });
+
+const { t } = useI18n();
 const toast = useToast();
 const active = ref(0);
 const dataSourceType = ref<"upload_file" | "yuque" | "web">("upload_file");
 
 const stepsv: stepPropsType[] = [
   {
-    title: "选择数据源",
+    title: t("knowledge_base.select_data_source"),
   },
   {
-    title: "文本分段与清洗",
+    title: t("knowledge_base.text_segmentation"),
   },
   {
-    title: "处理并完成",
+    title: t("knowledge_base.processed_completed"),
   },
 ];
 function next(step: number) {

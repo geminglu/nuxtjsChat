@@ -9,22 +9,26 @@
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <UForm :schema="schema" :state="state" class="space-y-6" @submit="onSubmit">
         <UFormGroup
-          label="用户名"
+          :label="$t('login.username')"
           name="username"
           size="xl"
           eager-validation
           :ui="{ wrapper: 'relative', error: 'absolute mt-1' }"
         >
-          <UInput v-model="state.username" placeholder="请输入用户名" />
+          <UInput v-model="state.username" :placeholder="$t('login.placeholder_username')" />
         </UFormGroup>
         <UFormGroup
-          label="密码"
+          :label="$t('login.password')"
           name="password"
           size="xl"
           eager-validation
           :ui="{ wrapper: 'relative', error: 'absolute mt-1' }"
         >
-          <UInput v-model="state.password" type="password" placeholder="请输入密码" />
+          <UInput
+            v-model="state.password"
+            type="password"
+            :placeholder="$t('login.placeholder_password')"
+          />
         </UFormGroup>
         <UFormGroup :ui="{ wrapper: 'text-end' }">
           <ULink
@@ -33,11 +37,11 @@
             active-class="text-primary"
             inactive-class="text-primary dark:text-primary-400 hover:text-primary-600 dark:hover:text-primary-500 font-semibold"
           >
-            忘记密码
+            {{ $t("login.forgotten_password") }}
           </ULink>
         </UFormGroup>
         <UButton type="submit" block size="xl" :loading="loginLoading" :disabled="loginLoading">
-          登 录
+          {{ $t("login.login") }}
         </UButton>
       </UForm>
       <UDivider label="OR" :ui="{ wrapper: { base: 'my-8' } }" />

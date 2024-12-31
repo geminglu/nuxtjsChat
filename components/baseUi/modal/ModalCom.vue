@@ -47,8 +47,13 @@
       <slot name="footer" />
     </div>
     <div v-else :class="[ui.footer.base, ui.footer.padding]" class="flex-row-reverse">
-      <UButton label="确 认" :loading="loading" @click="onConfirm" />
-      <UButton color="white" label="取 消" :disabled="loading" @click="isOpen = false" />
+      <UButton :label="$t('common.confirm')" :loading="loading" @click="onConfirm" />
+      <UButton
+        color="white"
+        :label="$t('common.cancel')"
+        :disabled="loading"
+        @click="isOpen = false"
+      />
     </div>
   </UModal>
 </template>
@@ -57,7 +62,7 @@
 import type { PropType } from "vue";
 import { useBreakpoints, breakpointsTailwind } from "@vueuse/core";
 import { twMerge } from "tailwind-merge";
-import { modal as modalConfig } from "#ui/ui.config";
+import type { modal as modalConfig } from "#ui/ui.config";
 import type { Button } from "#ui/types";
 
 const toast = useToast();
@@ -132,7 +137,8 @@ const props = defineProps({
    * 确定按钮事件，如果返回false或reject窗口停止关闭
    */
   confirm: {
-    type: Function as PropType<() => Promise<any> | void | Boolean>,
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    type: Function as PropType<() => Promise<any> | void | boolean>,
     default: () => {},
   },
 });

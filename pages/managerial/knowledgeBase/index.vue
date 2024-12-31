@@ -3,19 +3,19 @@
     <div class="flex justify-between px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
       <UInput v-model="q" placeholder="Filter people..." />
       <div>
-        <UButton icon="i-heroicons-arrow-path-20-solid">刷新</UButton>
+        <UButton icon="i-heroicons-arrow-path-20-solid">{{ $t("common.refresh") }}</UButton>
         <UButton
           class="ml-2"
           icon="i-heroicons-plus-circle"
           @click="router.push('/Managerial/knowledgeBase/create')"
         >
-          新增
+          {{ $t("common.new") }}
         </UButton>
       </div>
     </div>
     <UTable
-      :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: '加载中...' }"
-      :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: '暂无数据' }"
+      :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: $t('common.loading') }"
+      :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: $t('common.noData') }"
       :rows="filteredRows"
       :columns="columns"
     />

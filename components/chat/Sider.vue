@@ -9,7 +9,7 @@
         variant="ghost"
         @click="handleAdd"
       >
-        新建聊天
+        {{$t('chat.new_chat')}}
       </UButton>
     </div>
     <ChatList />
@@ -33,7 +33,7 @@
 
     <Modal
       v-model="open"
-      title="设置"
+      :title="$t('setting.title')"
       :confirm="confirm"
       :ui="{
         width: 'lg:max-w-3xl',
@@ -60,7 +60,7 @@ const chatStore = useChatStore();
 
 async function handleAdd() {
   const chat = await chatStore.addChat();
-  chatStore.setActive(chat.id);
+  chat && chatStore.setActive(chat.id);
 }
 
 function confirm() {

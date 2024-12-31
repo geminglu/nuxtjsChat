@@ -6,15 +6,14 @@
         :items="items"
         orientation="vertical"
         :ui="{ list: { width: 'w-40' } }"
-      >
-      </UTabs>
+      />
     </div>
 
     <div class="h-full flex-1 overflow-auto p-1">
       <UForm v-if="items[selected].key === 'account'" :state="userStore.userInfo">
         <Card>
           <CardList>
-            <UFormGroup label="用户名" class="form_group">
+            <UFormGroup :label="$t('setting.user_name')" class="form_group">
               <UInput v-model="userStore.userInfo.name" />
             </UFormGroup>
           </CardList>
@@ -23,13 +22,13 @@
       <UForm v-if="items[selected].key === 'model'" :state="modelaKey">
         <Card>
           <CardList>
-            <UFormGroup label="Ollama" class="form_group">
+            <UFormGroup :label="$t('setting.ollama')" class="form_group">
               <UToggle v-model="modelaKey.ollama.enable" />
             </UFormGroup>
           </CardList>
           <template v-if="modelaKey.ollama.enable">
             <CardList>
-              <UFormGroup label="Ollama Server URL" class="form_group">
+              <UFormGroup :label="$t('setting.ollama_server_url')" class="form_group">
                 <UInput v-model="modelaKey.ollama.url" placeholder="http://localhost:11434/" />
               </UFormGroup>
             </CardList>
@@ -71,6 +70,15 @@
           </template>
         </Card>
       </UForm>
+      <UForm v-if="items[selected].key === 'language'" :state="language">
+        <Card>
+          <CardList>
+            <UFormGroup :label="$t('setting.language')" class="form_group" name="language">
+              <USelect v-model="language.language" :options="languages" @change="checkLanguage" />
+            </UFormGroup>
+          </CardList>
+        </Card>
+      </UForm>
     </div>
   </div>
 </template>
@@ -79,21 +87,38 @@
 import useSettings from "~/store/modules/app";
 import useUserStore from "~/store/modules/user";
 import { Card, CardList } from "~/components/baseUi/CardList/index";
+import type { Locale } from "vue-i18n";
 
 defineOptions({
   name: "Settings",
 });
 
+// const { $t } = useI18n();
+const { t, locale, locales, setLocale } = useI18n();
+const switchLocalePath = useSwitchLocalePath();
+
 const selected = ref(0);
+
+const language = reactive({ language: locale.value });
+const languages = computed(() => {
+  return locales.value.map((i) => ({
+    label: i.name,
+    value: i.code,
+  }));
+});
 
 const items = [
   {
-    label: "账号",
+    label: t("setting.account"),
     key: "account",
   },
   {
-    label: "模型",
+    label: t("setting.model"),
     key: "model",
+  },
+  {
+    label: t("setting.language"),
+    key: "language",
   },
 ];
 
@@ -106,6 +131,13 @@ const modelaKey = reactive<Settings.ModelaKeyType>({
 
 function onSubmit() {
   settings.$state.modelaKey = modelaKey;
+  setLocale(language.language)
+}
+
+function checkLanguage(value: Locale) {
+  // console.log(213123, value);
+  // setLocale(value)
+  switchLocalePath(value);
 }
 
 defineExpose({

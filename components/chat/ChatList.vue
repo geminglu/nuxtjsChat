@@ -3,7 +3,7 @@
     <template v-if="!chatStore.chat.length">
       <div class="flex flex-col items-center mt-4 text-center text-neutral-300">
         <Icon name="ri:inbox-line" class="mb-2 text-3xl" />
-        <span>没有数据</span>
+        <span>{{ $t("common.noData") }}</span>
       </div>
     </template>
     <template v-else>
@@ -39,17 +39,17 @@
           </div>
           <div v-if="isActive(item.id)" class="z-10 flex visible">
             <template v-if="item.isEdit">
-              <button class="p-1" title="保存" @click="handleSave(item, $event)">
+              <button class="p-1" :title="$t('common.save')" @click="handleSave(item, $event)">
                 <Icon name="tdesign:save" />
               </button>
             </template>
             <template v-else>
-              <button class="p-1" title="编辑">
+              <button class="p-1" :title="$t('common.edit')">
                 <Icon name="tdesign:edit-2" @click="handleEdit(item, true, $event)" />
               </button>
               <button
                 class="p-1"
-                title="删除"
+                :title="$t('common.delete')"
                 @click="
                   () => {
                     isOpen = true;
@@ -67,8 +67,8 @@
     <Confirm
       v-model="isOpen"
       type="error"
-      title="删除"
-      description="删除后将无法恢复是否继续？"
+      :title="$t('common.delete')"
+      :description="$t('message.confirm_deletion')"
       :confirm="onConfirm"
     />
   </div>
@@ -128,6 +128,7 @@ async function onConfirm() {
   if (!deleteId) return;
   try {
     await chatStore.deleteChat(deleteId);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     //
   }

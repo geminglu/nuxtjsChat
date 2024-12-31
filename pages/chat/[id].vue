@@ -32,7 +32,12 @@
             :popper="{ placement: 'bottom-start' }"
             :ui="{ width: 'w-max' }"
           >
-            <UButton class="rounded-full mb-1 mr-1" variant="outline" title="模型" size="2xs">
+            <UButton
+              class="rounded-full mb-1 mr-1"
+              variant="outline"
+              :title="$t('chat.model')"
+              size="2xs"
+            >
               <Icon name="file-icons:robots" /><span class="leading-none">{{ chat?.model }}</span>
             </UButton>
             <template #item="{ item }">
@@ -52,29 +57,29 @@
             :rows="1"
             autofocus
             :disabled="loading"
-            placeholder="按“回车”发送，“Shift+回车”换行"
+            :placeholder="$t('chat.enter')"
             @keydown.enter.prevent="onEnter"
           />
           <UButton
             v-if="!loading"
-            title="发送"
+            :title="$t('common.send')"
             icon="i-iconoir-send-diagonal-solid"
             square
             variant="solid"
             :disabled="disabledBtn"
             @click="onEnter"
           >
-            发 送
+            {{ $t("common.send") }}
           </UButton>
           <UButton
             v-else
-            title="停止"
+            :title="$t('chat.stop')"
             icon="i-heroicons-stop-circle-20-solid"
             square
             variant="solid"
             @click="stop"
           >
-            停 止
+            {{ $t("chat.stop") }}
           </UButton>
         </div>
       </div>

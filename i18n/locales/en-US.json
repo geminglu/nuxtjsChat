@@ -1,0 +1,92 @@
+{
+  "setting": {
+    "title": "setting",
+    "language": "language",
+    "language_en": "English",
+    "language_zh": "Chinese",
+    "theme": "theme",
+    "theme_dark": "theme dark",
+    "theme_light": "theme light",
+    "account": "account",
+    "model": "model",
+    "ollama": "Ollama",
+    "ollama_server_url": "Ollama server address",
+    "user_name": "user name"
+  },
+  "common": {
+    "add": "Add",
+    "addSuccess": "Add Success",
+    "edit": "Edit",
+    "editSuccess": "Edit Success",
+    "delete": "Delete",
+    "deleteSuccess": "Delete Success",
+    "save": "Save",
+    "saveSuccess": "Save Success",
+    "reset": "Reset",
+    "action": "Action",
+    "export": "Export",
+    "exportSuccess": "Export Success",
+    "import": "Import",
+    "importSuccess": "Import Success",
+    "clear": "Clear",
+    "clearSuccess": "Clear Success",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "download": "Download",
+    "noData": "No Data",
+    "wrong": "Something went wrong, please try again later.",
+    "success": "Success",
+    "failed": "Failed",
+    "verify": "Verify",
+    "unauthorizedTips": "Unauthorized, please verify first.",
+    "stopResponding": "Stop Responding",
+    "cancel": "cancel",
+    "loading": "loading...",
+    "more": "more",
+    "new": "new",
+    "refresh": "refresh",
+    "search": "search",
+    "send": "send"
+  },
+  "chat": {
+    "enter": "Press ‘Enter’ to send, ‘Shift+Enter’ to change lines",
+    "model": "model",
+    "new_chat": "new chat",
+    "stop": "stop",
+    "message": {
+      "missing_models": "missing models",
+      "missing_models_noe": "At least one model is required to create a new dialogue"
+    }
+  },
+  "knowledge_base": {
+    "import_file": "import file",
+    "next_step": "next step",
+    "previous_step": "previous stop",
+    "processed_completed": "Processed and completed",
+    "select_data_source": "Selecting a data source",
+    "sync_web": "sync web",
+    "sync_yuque": "sync yuque",
+    "text_segmentation": "text segmentation and cleansing"
+  },
+  "layout": {
+    "repository": "repository"
+  },
+  "login": {
+    "forgotten_password": "forgotten password",
+    "login": "sign in",
+    "loginFailed": "login Failure",
+    "loginSuccess": "login Successful",
+    "password": "password",
+    "placeholder_password": "please enter your password",
+    "placeholder_username": "please enter your username",
+    "username": "user name"
+  },
+  "message": {
+    "confirm_deletion": "deleted will not be able to recover whether to continue?"
+  },
+  "table": {
+    "page": "page",
+    "total": "total {total} page"
+  }
+}
