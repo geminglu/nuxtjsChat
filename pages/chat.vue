@@ -22,6 +22,7 @@ async function init() {
     // 如果聊天列表中没有记录就需要创建一个
     if (!chat.length) {
       const chat = await chatStore.addChat();
+      if (!chat) return;
       chatStore.setActive(chat.id);
       // router.replace(`/chat/${chat.id}`);
       return;

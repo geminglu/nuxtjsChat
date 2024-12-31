@@ -6,6 +6,8 @@ export default defineNuxtConfig({
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
     },
+    /** 静态资源前缀 */
+    buildAssetsDir: "/app/",
   },
   devtools: {
     enabled: true,
@@ -28,6 +30,7 @@ export default defineNuxtConfig({
     "@pinia-plugin-persistedstate/nuxt",
     "@nuxt/eslint",
   ],
+  plugins: [{ src: "~/utils/encrypt.ts", ssr: false, mode: "client" }],
   css: ["~/style/index.less"],
   piniaPersistedstate: {
     cookieOptions: {

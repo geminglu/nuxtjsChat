@@ -85,9 +85,9 @@ export default class DataSet implements DateSetType {
         } else {
           requestConfig = this.transport?.read;
         }
-        result = await useNuxtApp().$api(requestConfig.url, requestConfig.opt);
+        result = await (useNuxtApp().$api as any)(requestConfig.url, requestConfig.opt);
       } else if (this.queryUrl) {
-        result = await useNuxtApp().$api(this.queryUrl, { method: "get", params: param });
+        result = await (useNuxtApp().$api as any)(this.queryUrl, { method: "get", params: param });
       } else {
         throw new Error("queryUrl和transport.read至少有一项");
       }

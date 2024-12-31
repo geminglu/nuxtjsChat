@@ -1,6 +1,5 @@
-import { object, string, type TypeOf } from "zod";
-import type { objectKey } from "~/components/baseUi/steps/type";
 import type { UploadFile } from "~/components/baseUi/upload/type";
+import path from "path-browserify";
 
 /**
  * 范围随机数
@@ -50,7 +49,8 @@ export function base64ToString(base64: string) {
 }
 
 export function fullUrl(url: string) {
-  return new URL(`/${url}`, import.meta.url).href;
+  const buildAssetsDir = useNuxtApp().payload.config?.app.buildAssetsDir as string;
+  return path.join(buildAssetsDir, url);
 }
 
 /**
@@ -58,7 +58,7 @@ export function fullUrl(url: string) {
  */
 export function extendFile(file: UploadFile): UploadFile & { icon: string } {
   const extendName = file.name.split(".").pop()?.toLowerCase();
-  const fileExtend = {
+  const fileExtend: { [x: string]: string } = {
     pdf: "assets/svg/PDF.svg",
     doc: "assets/svg/Doc.svg",
     docx: "assets/svg/Doc.svg",
@@ -91,6 +91,5 @@ export function extendFile(file: UploadFile): UploadFile & { icon: string } {
     default: "assets/svg/unknownFile.svg",
   };
 
-  // @ts-ignore
-  return { ...file, icon: fullUrl(fileExtend[extendName] || fileExtend.default) };
+  return { ...file, icon: fullUrl(fileExtend[extendName || "default"] || fileExtend.default) };
 }

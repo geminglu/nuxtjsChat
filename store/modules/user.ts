@@ -27,8 +27,8 @@ export const useUserStore = defineStore("userStore", {
      * 登陆
      */
     async login(userName: string, password: string) {
-      const encryptPassword = await encrypt(password);
-      const encryptUserName = await encrypt(userName);
+      const encryptPassword = await useNuxtApp().$RSAEncrypt(password);
+      const encryptUserName = await useNuxtApp().$RSAEncrypt(userName);
       await useNuxtApp().$api("/api/auth/signIn", {
         method: "POST",
         body: {

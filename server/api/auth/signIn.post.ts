@@ -6,7 +6,8 @@ import jwt from "jsonwebtoken";
 import config from "~/config";
 import { setCookie } from "h3";
 import fs from "fs";
-import { randomNumber } from "~/utils";
+// import { randomNumber } from "~/utils";
+import { randomNumberRange } from "../../utils/math";
 import type { H3Event, EventHandlerRequest } from "h3";
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";
@@ -23,6 +24,17 @@ type Schema = z.output<typeof schema>;
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<Schema>(event);
+
+  try {
+    schema.parse(body);
+  } catch (error: any) {
+    const e = JSON.parse(error?.message || "{}")[0];
+    throw createError({
+      status: 400,
+      statusMessage: "参数错误",
+      message: `${e.path[0]} ${e.message}`,
+    });
+  }
 
   const privateKey = new NodeRSA(config.privateKey || "");
   privateKey.setOptions({ encryptionScheme: "pkcs1" });
@@ -83,7 +95,8 @@ export async function createNewUser(userInfo?: Partial<Prisma.UserCreateInput>) 
     data: {
       name: userInfo?.name || Math.random().toString(32).slice(6),
       avatar:
-        userInfo?.avatar || `/images/avatar/${avatarDir[randomNumber(0, avatarDir.length - 1)]}`,
+        userInfo?.avatar ||
+        `/images/avatar/${avatarDir[randomNumberRange(0, avatarDir.length - 1)]}`,
       microsoftOid: userInfo?.microsoftOid,
       password: userInfo?.password,
     },

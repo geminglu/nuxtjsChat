@@ -28,6 +28,17 @@ export const useChatStore = defineStore("chatStore", {
     },
 
     async addChat(title: string = "new chat") {
+      if (!this.models.length) {
+        const toast = useToast();
+        const t = useNuxtApp().$i18n.t;
+        toast.add({
+          color: "red",
+          title: t("chat.message.missing_models"),
+          description: t("chat.message.missing_models_noe"),
+          icon: "i-heroicons-x-mark-20-solid",
+        });
+        return;
+      }
       const chat = await useNuxtApp().$api("/api/chat/list", {
         method: "POST",
         body: { title: title, model: this.models[0].name },

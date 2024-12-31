@@ -1,5 +1,5 @@
-import { Awaitable } from "~/typings/typescript";
-import type { ComputedRef, ExtractPropTypes } from "vue";
+import type { Awaitable } from "~/typings/typescript";
+import type { ComputedRef } from "vue";
 import type Upload from "./upload.vue";
 import type UploadContent from "./UploadContent.vue";
 import type UploadDragger from "./UploadDragger.vue";
@@ -116,6 +116,7 @@ export interface UploadContentProps extends uploadBaseProps {
 export interface UploadHooks {
   beforeUpload: (
     rawFile: UploadRawFile,
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   ) => Awaitable<void | undefined | null | boolean | File | Blob>;
   beforeRemove: (uploadFile: UploadFile, uploadFiles: UploadFiles) => Awaitable<boolean>;
   onRemove: (uploadFile: UploadFile, uploadFiles: UploadFiles) => void;

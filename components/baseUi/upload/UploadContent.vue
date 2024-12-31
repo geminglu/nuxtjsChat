@@ -22,7 +22,7 @@
       type="file"
       @change="handleChange"
       @click.stop
-    />
+    >
   </div>
 </template>
 
@@ -44,7 +44,7 @@ defineOptions({
   name: "UploadContent",
 });
 
-const entriesOf = <T extends Object>(arr: T) => Object.entries(arr) as Entries<T>;
+const entriesOf = <T extends object>(arr: T) => Object.entries(arr) as Entries<T>;
 
 const props = defineProps<UploadContentProps>();
 
@@ -173,10 +173,12 @@ const doUpload = async (rawFile: UploadRawFile, beforeData?: UploadContentProps[
     },
     onSuccess: (res) => {
       onSuccess(res, rawFile);
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete requests.value[uid];
     },
     onError: (err) => {
       onError(err, rawFile);
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete requests.value[uid];
     },
   };
@@ -210,6 +212,7 @@ const abort = (file?: UploadFile) => {
   );
   _reqs.forEach(([uid, req]) => {
     if (req instanceof XMLHttpRequest) req.abort();
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete requests.value[uid];
   });
 };
