@@ -21,7 +21,7 @@ const props = defineProps({
   /**
    * 确定按钮事件，如果返回false或reject窗口停止关闭
    */ confirm: {
-    type: Function as PropType<() => Promise<any> | void | Boolean>,
+    type: Function as PropType<() => Promise<any> | boolean>,
     default: () => {},
   },
 });
@@ -70,6 +70,5 @@ const icons = computed(() => {
       icon: { base: icons.color } as any,
     }"
     :confirm="props.confirm"
-  >
-  </Modal>
+  />
 </template>
